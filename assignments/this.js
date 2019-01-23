@@ -63,4 +63,4 @@ function congratulate(decision) {
     }
 }
 
-congratulate.call(james, james.admitted) // Hi James, welcome to Lamba School!
+// congratulate.call(james, james.admitted) // Hi James, welcome to Lamba School!
