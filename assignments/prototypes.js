@@ -34,6 +34,8 @@ function CharacterStats(characterAttributes){
   GameObject.call(this, characterAttributes);
   this.healthPoints = characterAttributes.healthPoints;
   this.name = characterAttributes.name;
+  this.level = characterAttributes.level;
+  this.baseDamage = characterAttributes.baseDamage;
 }
 
 CharacterStats.prototype = Object.create(GameObject.prototype);
@@ -134,3 +136,114 @@ Humanoid.prototype.greet = function() {return `${this.name} offers a greeting in
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+
+  // ====== Humanoid Constructor ====== // 
+  // function Humanoid(humanoidAttributes){
+  //   CharacterStats.call(this, humanoidAttributes);
+  //   this.team = humanoidAttributes.team;
+  //   this.weapons = humanoidAttributes.weapons;
+  //   this.language = humanoidAttributes.language;
+  // }
+  
+  // Humanoid.prototype = Object.create(CharacterStats.prototype);
+  // Humanoid.prototype.greet = function() {return `${this.name} offers a greeting in ${this.language}.`}
+
+
+// Villian 
+function villianStrength(level, baseDamage) {
+  return Math.ceil(baseDamage * (level / 5));
+}
+
+
+function Villian(villianAttributes){
+  Humanoid.call(this, villianAttributes);
+}
+
+Villian.prototype = Object.create(Humanoid.prototype);
+
+Villian.prototype.attack = function(target) {
+  if (target.healthPoints === 0){
+    console.log (`Error! This opponent does not exist!`);
+  } else if (target.healthPoints > villianStrength(this.level, this.baseDamage)) {
+    target.healthPoints -= villianStrength(this.level, this.baseDamage);
+    console.log(target.takeDamage() + ` ${target.healthPoints} health left.`);
+  } else if (villianStrength(this.level, this.baseDamage) >= target.healthPoints) {
+    target.healthPoints = 0;
+    console.log(target.destroy());
+  } 
+}
+
+
+// Hero
+function heroStrength(level, baseDamage) {
+  return Math.ceil(baseDamage * (level / 3));
+}
+
+function Hero(heroAttributes){
+  Humanoid.call(this, heroAttributes);
+}
+
+Hero.prototype = Object.create(Humanoid.prototype);
+
+Hero.prototype.attack = function(target) {
+  if (target.healthPoints === 0){
+    console.log (`Error! This opponent does not exist!`);
+  } else if (target.healthPoints > heroStrength(this.level, this.baseDamage)) {
+    target.healthPoints -= heroStrength(this.level, this.baseDamage);
+    console.log(target.takeDamage() + ` ${target.healthPoints} health left.`);
+  } else if (heroStrength(this.level, this.baseDamage) >= target.healthPoints) {
+    target.healthPoints = 0;
+    console.log(target.destroy());
+  } 
+}
+
+const orc = new Villian({
+  createdAt: new Date(),
+  dimensions: {
+    length: 1,
+    width: 2,
+    height: 4,
+  },
+  healthPoints: 10,
+  level: 4,
+  name: 'Smelly',
+  team: 'Doom',
+  weapons: [
+    'Bow',
+    'Dagger',
+  ],
+  language: 'Elvish',
+  baseDamage: 2
+});
+
+
+const prince = new Hero({
+  createdAt: new Date(),
+  dimensions: {
+    length: 1,
+    width: 2,
+    height: 4,
+  },
+  healthPoints: 10,
+  level: 5,
+  name: 'Lancelot',
+  team: 'Forest Kingdom',
+  weapons: [
+    'Bow',
+    'Long Sword',
+  ],
+  language: 'English',
+  baseDamage: 3
+});
+
+
+// The Battle
+prince.attack(orc)
+prince.attack(orc)
+prince.attack(orc)
+prince.attack(orc)
+
+console.log(orc)
+
+
+ 
